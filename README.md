@@ -21,7 +21,7 @@ Coming soon...
 | [npm-build.yaml](.github/workflows/npm-build.yaml)         | `cssnr/workflows/.github/workflows/npm-build.yaml`     |
 | [deploy-static.yaml](.github/workflows/deploy-static.yaml) | `cssnr/workflows/.github/workflows/deploy-static.yaml` |
 
-Example using both workflows: [django-files/django-files.github.io/.github/workflows/dev.yaml](https://github.com/django-files/django-files.github.io/blob/master/.github/workflows/dev.yaml)
+Example using both workflows: [django-files/django-files.github.io/dev.yaml](https://github.com/django-files/django-files.github.io/blob/master/.github/workflows/dev.yaml)
 
 ### npm-build.yaml
 
@@ -34,10 +34,13 @@ jobs:
     permissions:
       contents: read
     with:
-      install: "npm ci"
-      build: "npm run docs:build"
-      path: "dist"
-      name: "artifact"
+      install: "npm ci" # install command
+      build: "npm run build" # build command
+      path: "dist" # directory of artifacts
+      name: "artifact" # artifact name
+      pages: false # create a pages artifact
+    secrets:
+      webhook: ${{ secrets.webhook }} # failure notification
 
   # Example Usage
   deploy:
