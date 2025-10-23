@@ -31,9 +31,8 @@ on:
       path:
         type: string
 
-## Need to set dynamic group
 #concurrency:
-#  group: deploy-static
+#  group: ${{ github.workflow }}-${{ github.ref }}
 #  cancel-in-progress: true
 
 jobs:
@@ -47,6 +46,12 @@ jobs:
       url: ${{ inputs.url }}
 
     steps:
+      - name: "Debug CTX github"
+        continue-on-error: true
+        env:
+          GITHUB_CTX: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CTX"
+
       - name: "Download Artifact"
         uses: actions/download-artifact@v5
         with:
