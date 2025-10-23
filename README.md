@@ -17,15 +17,48 @@ Coming soon...
 
 | Workflow File                                              | Uses Line                                              |
 | :--------------------------------------------------------- | :----------------------------------------------------- |
+| [npm-build.yaml](.github/workflows/npm-build.yaml)         | `cssnr/workflows/.github/workflows/npm-build.yaml`     |
 | [deploy-static.yaml](.github/workflows/deploy-static.yaml) | `cssnr/workflows/.github/workflows/deploy-static.yaml` |
+
+### npm-build.yaml
+
+```yaml
+jobs:
+  build:
+    name: "Build"
+    if: ${{ !contains(github.event.head_commit.message, '#nodev') }}
+    uses: cssnr/workflows/.github/workflows/npm-build.yaml@master
+    permissions:
+      contents: read
+    with:
+      install: "npm ci"
+      build: "npm run docs:build"
+      path: "dist"
+      name: "artifact"
+
+  deploy:
+    name: "Deploy"
+    needs: build
+    runs-on: ubuntu
+    steps:
+      - name: "Download Artifact"
+        uses: actions/download-artifact@v5
+        with:
+          name: "artifact"
+      - name: "Debug"
+        run: ls -lAh .
+```
 
 ### deploy-static.yaml
 
 ```yaml
 jobs:
   build:
-    name: "Build"
-    ## Build and upload an "artifact"
+    - name: "Upload Artifact"
+      uses: actions/upload-artifact@v4
+      with:
+        path: dist
+        name: "artifact"
 
   deploy:
     name: "Deploy"

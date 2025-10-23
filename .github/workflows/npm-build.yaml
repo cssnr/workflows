@@ -1,0 +1,98 @@
+name: "NPM Build"
+
+on:
+  workflow_call:
+    inputs:
+      install:
+        type: string
+        default: "npm ci"
+      build:
+        type: string
+        default: "npm run build"
+      path:
+        type: string
+        default: "dist"
+      name:
+        type: string
+        default: "artifact"
+      pages:
+        type: boolean
+        default: false
+    secrets:
+      webhook:
+
+env:
+  path: ""
+  purge-domain: ""
+
+concurrency:
+  group: build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: "Debug CTX github"
+        continue-on-error: true
+        env:
+          GITHUB_CTX: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CTX"
+
+      - name: "Checkout"
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: "Setup Node"
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: "Install"
+        run: |
+          ${{ inputs.install }}
+
+      - name: "Build"
+        run: |
+          ${{ inputs.build }}
+
+      - name: "Debug"
+        continue-on-error: true
+        run: |
+          echo "inputs.name: ${{ inputs.name }}"
+          echo "inputs.path: ${{ inputs.path }}"
+          echo "::group::ls"
+          ls -lAh .
+          echo "::endgroup::"
+          ls -lAh ${{ inputs.path }}
+          echo "::group::tree"
+          tree ${{ inputs.path }}
+          echo "::endgroup::"
+
+      - name: "Upload Artifact"
+        if: ${{ !inputs.pages }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.name }}
+          path: ${{ inputs.path }}
+          if-no-files-found: "error"
+          include-hidden-files: true
+
+      - name: "Upload Pages Artifact"
+        if: ${{ inputs.pages }}
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ inputs.path }}
+
+      - name: "Send Discord Failure Notification"
+        if: ${{ failure() && env.webhook }}
+        uses: sarisia/actions-status-discord@v1
+        env:
+          webhook: ${{ secrets.webhook }}
+        with:
+          webhook: ${{ secrets.webhook }}
+          description: "https://dev-static.cssnr.com/"
