@@ -21,13 +21,9 @@ on:
     secrets:
       webhook:
 
-env:
-  path: ""
-  purge-domain: ""
-
-concurrency:
-  group: build
-  cancel-in-progress: true
+#concurrency:
+#  group: ${{ github.workflow }}-${{ github.ref }}
+#  cancel-in-progress: true
 
 jobs:
   build:
@@ -88,7 +84,7 @@ jobs:
         with:
           path: ${{ inputs.path }}
 
-      - name: "Send Discord Failure Notification"
+      - name: "Send Discord Notification"
         if: ${{ failure() && env.webhook }}
         uses: sarisia/actions-status-discord@v1
         env:

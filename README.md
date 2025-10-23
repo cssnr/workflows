@@ -11,7 +11,7 @@
 
 ~~Reusable~~ Workflows.
 
-- https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows#passing-inputs-and-secrets-to-a-reusable-workflow
+- https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows
 
 Coming soon...
 
@@ -36,6 +36,7 @@ jobs:
       path: "dist"
       name: "artifact"
 
+  # Example Usage
   deploy:
     name: "Deploy"
     needs: build
@@ -54,6 +55,7 @@ jobs:
 ```yaml
 jobs:
   build:
+    # Example Usage
     - name: "Upload Artifact"
       uses: actions/upload-artifact@v4
       with:
