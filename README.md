@@ -1,3 +1,4 @@
+[![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/virustotal-action/.lint.yaml?logo=cachet&label=lint)](https://github.com/cssnr/virustotal-action/actions/workflows/.lint.yaml)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/smashedr/github-projects?logo=vitepress&logoColor=white&label=updated)](https://github.com/smashedr/github-projects/pulse)
 [![GitHub Contributors](https://img.shields.io/github/contributors-anon/smashedr/github-projects?logo=github)](https://github.com/smashedr/github-projects/graphs/contributors)
 [![GitHub Repo Size](https://img.shields.io/github/repo-size/smashedr/github-projects?logo=bookstack&logoColor=white&label=repo%20size)](https://github.com/smashedr/github-projects)
