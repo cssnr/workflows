@@ -15,11 +15,11 @@
 
 Coming soon...
 
-| Workflow File                                                  | Uses Line                                                |
-| :------------------------------------------------------------- | :------------------------------------------------------- |
-| [rsync-artifacts.yaml](.github/workflows/rsync-artifacts.yaml) | `cssnr/workflows/.github/workflows/rsync-artifacts.yaml` |
+| Workflow File                                              | Uses Line                                              |
+| :--------------------------------------------------------- | :----------------------------------------------------- |
+| [deploy-static.yaml](.github/workflows/deploy-static.yaml) | `cssnr/workflows/.github/workflows/deploy-static.yaml` |
 
-### rsync-artifacts.yaml
+### deploy-static.yaml
 
 ```yaml
 jobs:

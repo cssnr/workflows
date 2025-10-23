@@ -101,4 +101,4 @@ jobs:
           webhook: ${{ secrets.webhook }}
         with:
           webhook: ${{ secrets.webhook }}
-          description: "https://dev-static.cssnr.com/"
+          description: ${{ inputs.url }}
