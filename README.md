@@ -20,7 +20,7 @@ Coming soon...
 | [npm-build.yaml](.github/workflows/npm-build.yaml)         | `cssnr/workflows/.github/workflows/npm-build.yaml`     |
 | [deploy-static.yaml](.github/workflows/deploy-static.yaml) | `cssnr/workflows/.github/workflows/deploy-static.yaml` |
 
-Example using both workflows: https://github.com/django-files/django-files.github.io/blob/master/.github/workflows/dev.yaml
+Example using both workflows: [django-files/django-files.github.io/.github/workflows/dev.yaml](https://github.com/django-files/django-files.github.io/blob/master/.github/workflows/dev.yaml)
 
 ### npm-build.yaml
 
