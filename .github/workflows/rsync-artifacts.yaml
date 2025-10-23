@@ -1,0 +1,104 @@
+name: "Deploy Static"
+
+on:
+  workflow_call:
+    secrets:
+      host:
+        required: true
+      user:
+        required: true
+      pass:
+        required: true
+      port:
+        required: true
+      webhook:
+    inputs:
+      name:
+        type: string
+        default: "dev"
+      url:
+        type: string
+        default: "https://dev-static.cssnr.com/"
+      artifact:
+        type: string
+        default: "artifact"
+      dest:
+        type: string
+        default: "/static"
+      robots:
+        type: boolean
+        default: false
+      path:
+        type: string
+
+## Need to set dynamic group
+#concurrency:
+#  group: deploy-static
+#  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: "Deploy"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    environment:
+      name: ${{ inputs.name }}
+      url: ${{ inputs.url }}
+
+    steps:
+      - name: "Download Artifact"
+        uses: actions/download-artifact@v5
+        with:
+          name: ${{ inputs.artifact }}
+
+      - name: "Debug Artifact"
+        continue-on-error: true
+        run: |
+          ls -lAh .
+          echo "::group::tree"
+          tree .
+          echo "::endgroup::"
+
+      - name: "Configure Path"
+        if: ${{ inputs.path }}
+        run: |
+          mkdir "${{ inputs.path }}"
+          rsync -aPvh --remove-source-files ./ "${{ inputs.path }}"
+          find . -type d -empty -delete
+          # Add html redirect
+          cat <<EOF > index.html
+          <html><head><meta http-equiv="refresh" content="3; url=/${{ inputs.path }}" /></head><body>
+          <p>Redirecting to: <a href="/${{ inputs.path }}">/${{ inputs.path }}</a></p></body></html>
+          EOF
+
+      - name: "No Robots"
+        if: ${{ inputs.robots }}
+        run: |
+          cat <<EOF > robots.txt
+          User-agent: *
+          Disallow: /
+          EOF
+
+      - name: "Setup SSH"
+        run: |
+          mkdir -p "${HOME}/.ssh" && chmod 0700 "${HOME}/.ssh"
+          ssh-keyscan -p "${{ secrets.port }}" -H "${{ secrets.host }}" \
+            | tee -a "${HOME}/.ssh/known_hosts"
+
+      - name: "Deploy Artifact"
+        env:
+          SSHPASS: ${{ secrets.pass }}
+        run: |
+          sshpass -e rsync -aPvh --delete -e \
+            'ssh -p ${{ secrets.port }} -o ConnectTimeout=30' \
+            ./ "${{ secrets.user }}"@"${{ secrets.host }}":"${{ inputs.dest }}"
+
+      - name: "Send Discord Notification"
+        if: ${{ env.webhook }}
+        uses: sarisia/actions-status-discord@v1
+        env:
+          webhook: ${{ secrets.webhook }}
+        with:
+          webhook: ${{ secrets.webhook }}
+          description: "https://dev-static.cssnr.com/"
