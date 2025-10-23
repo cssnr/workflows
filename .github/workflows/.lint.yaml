@@ -6,8 +6,6 @@ on:
   push:
     branches: [master]
 
-# Debug 1
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
