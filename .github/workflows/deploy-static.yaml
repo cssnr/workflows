@@ -71,19 +71,25 @@ jobs:
           mkdir "${{ inputs.path }}"
           rsync -aPvh --remove-source-files ./ "${{ inputs.path }}"
           find . -type d -empty -delete
-          # Add html redirect
-          cat <<EOF > index.html
-          <html><head><meta http-equiv="refresh" content="3; url=/${{ inputs.path }}" /></head><body>
-          <p>Redirecting to: <a href="/${{ inputs.path }}">/${{ inputs.path }}</a></p></body></html>
-          EOF
 
-      - name: "No Robots"
+      - name: "Redirect"
+        if: ${{ inputs.path }}
+        uses: cssnr/create-files-action@master
+        with:
+          type: "redirect"
+          file: "index.html"
+          data: |
+            url: ${{ inputs.path }}
+            text: ${{ inputs.path }}
+            title: Redirecting...
+            timer: 5
+
+      - name: "Robots"
         if: ${{ inputs.robots }}
-        run: |
-          cat <<EOF > robots.txt
-          User-agent: *
-          Disallow: /
-          EOF
+        uses: cssnr/create-files-action@master
+        with:
+          type: "robots"
+          file: "robots.txt"
 
       - name: "Setup SSH"
         run: |
