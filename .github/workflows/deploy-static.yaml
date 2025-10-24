@@ -74,7 +74,7 @@ jobs:
 
       - name: "Redirect"
         if: ${{ inputs.path }}
-        uses: cssnr/create-files-action@master
+        uses: cssnr/create-files-action@updates
         with:
           type: "redirect"
           file: "index.html"
@@ -86,7 +86,7 @@ jobs:
 
       - name: "Robots"
         if: ${{ inputs.robots }}
-        uses: cssnr/create-files-action@master
+        uses: cssnr/create-files-action@updates
         with:
           type: "robots"
           file: "robots.txt"
