@@ -71,7 +71,7 @@ jobs:
 
       - name: "Upload Artifact"
         if: ${{ !inputs.pages }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ inputs.name }}
           path: ${{ inputs.path }}
