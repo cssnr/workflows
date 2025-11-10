@@ -54,9 +54,8 @@ jobs:
         id: install
         run: ${{ inputs.install }}
 
-      - name: "ESLint"
-        id: eslint
-        if: ${{ !cancelled() }}
+      - name: "Lint"
+        if: ${{ !cancelled() && inputs.lint != '' }}
         run: ${{ inputs.lint }}
 
       - name: "Prettier"
@@ -91,6 +90,6 @@ jobs:
           "${RUNNER_TEMP}/actionlint" -color -verbose -shellcheck= -pyflakes=
 
       - name: "Verify action.yml"
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && inputs.action != '' }}
         run: |
           yq -e '.runs.main | test("^dist/")' ${{ inputs.action }}
