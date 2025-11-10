@@ -15,6 +15,12 @@ on:
       prettier:
         type: string
         default: "npm run prettier:check"
+      yamllint:
+        type: boolean
+        default: true
+      actionlint:
+        type: boolean
+        default: true
       action:
         type: string
         default: "action.yml"
@@ -59,7 +65,7 @@ jobs:
           npm run prettier:check
 
       - name: "Yamllint"
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && inputs.yamllint }}
         env:
           CONFIG: "{extends: relaxed, ignore: [node_modules/], rules: {line-length: {max: 119}}}"
         run: |
@@ -69,7 +75,7 @@ jobs:
           yamllint -d '${{ env.CONFIG }}' .
 
       - name: "Actionlint"
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && inputs.actionlint }}
         run: |
           echo "::group::Download"
           loc=$(curl -sI https://github.com/rhysd/actionlint/releases/latest | grep -i '^location:')
