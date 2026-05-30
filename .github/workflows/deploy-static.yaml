@@ -31,10 +31,6 @@ on:
       path:
         type: string
 
-#concurrency:
-#  group: ${{ github.workflow }}-${{ github.ref }}
-#  cancel-in-progress: true
-
 jobs:
   deploy:
     name: "Deploy"
@@ -46,14 +42,8 @@ jobs:
       url: ${{ inputs.url }}
 
     steps:
-      - name: "Debug CTX github"
-        continue-on-error: true
-        env:
-          GITHUB_CTX: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CTX"
-
       - name: "Download Artifact"
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.artifact }}
 
@@ -102,8 +92,8 @@ jobs:
           SSHPASS: ${{ secrets.pass }}
         run: |
           sshpass -e rsync -aPvh --delete -e \
-            'ssh -p ${{ secrets.port }} -o ConnectTimeout=30' \
-            ./ "${{ secrets.user }}"@"${{ secrets.host }}":"${{ inputs.dest }}"
+            "ssh -p ${{ secrets.port }} -o ConnectTimeout=30" \
+            ./ "${{ secrets.user }}@${{ secrets.host }}:${{ inputs.dest }}"
 
       - name: "Send Discord Notification"
         if: ${{ env.webhook }}
