@@ -20,10 +20,8 @@ on:
         default: false
     secrets:
       webhook:
-
-#concurrency:
-#  group: ${{ github.workflow }}-${{ github.ref }}
-#  cancel-in-progress: true
+      ai_chat_api:
+      ai_chat_auth:
 
 jobs:
   build:
@@ -53,6 +51,9 @@ jobs:
           ${{ inputs.install }}
 
       - name: "Build"
+        env:
+          VITE_AI_API: ${{ secrets.ai_chat_api }}
+          VITE_AI_AUTH: ${{ secrets.ai_chat_auth }}
         run: |
           ${{ inputs.build }}
 
@@ -71,7 +72,7 @@ jobs:
 
       - name: "Upload Artifact"
         if: ${{ !inputs.pages }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.name }}
           path: ${{ inputs.path }}
@@ -80,7 +81,7 @@ jobs:
 
       - name: "Upload Pages Artifact"
         if: ${{ inputs.pages }}
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ${{ inputs.path }}
 
