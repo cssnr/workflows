@@ -20,6 +20,8 @@ on:
         default: false
     secrets:
       webhook:
+      ai_chat_api:
+      ai_chat_auth:
 
 jobs:
   build:
@@ -49,6 +51,9 @@ jobs:
           ${{ inputs.install }}
 
       - name: "Build"
+        env:
+          VITE_AI_API: ${{ secrets.ai_chat_api }}
+          VITE_AI_AUTH: ${{ secrets.ai_chat_auth }}
         run: |
           ${{ inputs.build }}
 
