@@ -93,7 +93,7 @@ jobs:
         run: |
           sshpass -e rsync -aPvh --delete -e \
             "ssh -p ${{ secrets.port }} -o ConnectTimeout=30" \
-            ./ "${{ secrets.user }}"@"${{ secrets.host }}":"${{ inputs.dest }}"
+            ./ "${{ secrets.user }}@${{ secrets.host }}:${{ inputs.dest }}"
 
       - name: "Send Discord Notification"
         if: ${{ env.webhook }}
