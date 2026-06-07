@@ -19,9 +19,10 @@ on:
         type: boolean
         default: false
     secrets:
-      webhook:
-      ai_chat_api:
-      ai_chat_auth:
+      WEBHOOK:
+      DISCORD_WEBHOOK:
+      AI_CHAT_API:
+      AI_CHAT_AUTH:
 
 jobs:
   build:
@@ -52,8 +53,8 @@ jobs:
 
       - name: "Build"
         env:
-          VITE_AI_API: ${{ secrets.ai_chat_api }}
-          VITE_AI_AUTH: ${{ secrets.ai_chat_auth }}
+          VITE_AI_API: ${{ secrets.AI_CHAT_API }}
+          VITE_AI_AUTH: ${{ secrets.AI_CHAT_AUTH }}
         run: |
           ${{ inputs.build }}
 
@@ -89,7 +90,7 @@ jobs:
         if: ${{ failure() && env.webhook }}
         uses: sarisia/actions-status-discord@v1
         env:
-          webhook: ${{ secrets.webhook }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK || secrets.WEBHOOK }}
         with:
-          webhook: ${{ secrets.webhook }}
-          description: "https://dev-static.cssnr.com/"
+          webhook: ${{ env.webhook }}
+          description: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
