@@ -19,6 +19,7 @@ on:
         type: boolean
         default: false
     secrets:
+      WEBHOOK:
       DISCORD_WEBHOOK:
       AI_CHAT_API:
       AI_CHAT_AUTH:
@@ -89,7 +90,7 @@ jobs:
         if: ${{ failure() && env.webhook }}
         uses: sarisia/actions-status-discord@v1
         env:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK || secrets.WEBHOOK }}
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook: ${{ env.webhook }}
           description: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
