@@ -94,5 +94,5 @@ jobs:
         env:
           webhook: ${{ secrets.DISCORD_WEBHOOK || secrets.webhook }}
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK || secrets.webhook }}
+          webhook: ${{ env.webhook }}
           description: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
